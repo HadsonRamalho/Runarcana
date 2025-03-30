@@ -1,5 +1,5 @@
-import Footer from "../components/footer";
-import Header from "../components/header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/app-sidebar";
 
 export default function LoggedLayout({
   children,
@@ -8,10 +8,11 @@ export default function LoggedLayout({
 }) {
   return (
     <>
-      <Header />
-      <h2>Somente pessoas com login podem acessar</h2>
+    <SidebarProvider>
+    <AppSidebar />
+    <SidebarTrigger/>
       {children}
-      <Footer />
+    </SidebarProvider>
     </>
   );
 }

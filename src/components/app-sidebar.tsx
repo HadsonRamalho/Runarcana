@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, HomeIcon, Inbox, NotebookIcon, Search, Settings, User2Icon } from "lucide-react"
 
 import {
   Sidebar,
@@ -11,34 +11,44 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useNavigate } from "react-router-dom"
+import { RacasIcon } from "./icons/racas";
 
 const items = [
   {
     title: "Página Inicial",
     url: "/",
-    icon: Home,
+    icon: <HomeIcon/>
   },
   {
-    title: "Settings",
+    title: "Criar Ficha",
+    url: "/criar_ficha",
+    icon: <NotebookIcon />
+  },
+  {
+    title: "Origens",
+    url: "/origens",
+    icon: <RacasIcon />
+  },
+  {
+    title: "Configurações",
     url: "/",
-    icon: Settings,
+    icon: <Settings/>
   },
 ]
 
 export function AppSidebar() {
-  const navigate = useNavigate();
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Runarcana</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="hover:cursor-pointer">
-                    <a onClick={() => navigate(item.url)}>
-                      <item.icon />
+                    <a href={item.url}>
+                      {item.icon}
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>

@@ -4,6 +4,8 @@ import Home from "@/pages/home";
 import { createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./privateRoute";
 import { Prohibited } from "@/pages/prohibited";
+import { Origens } from "@/pages/origens";
+import { CriarFicha } from "@/pages/criar_ficha";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +16,14 @@ const router = createBrowserRouter([
   {
     path: "/sobre",
     element: <About />,
+  },
+  {
+    path: "/origens",
+    element: <Origens />,
+  },
+  {
+    path: "/criar_ficha",
+    element: <CriarFicha />,
   },
   {
     path: "/logado",
