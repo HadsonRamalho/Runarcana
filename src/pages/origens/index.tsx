@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { ArrowBigDown, ArrowBigUp } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp, ArrowDown, ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { InformacaoHabilidade, InformacaoLinhagem } from "../criar_ficha";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const informacoes_campos = {
     longevidade: `Uma medida comum aos povos de diversas origens são os anos
@@ -22,7 +26,7 @@ const informacoes_campos = {
     característica ligadas à região ou mesmo a uma Origem específica.
     Ao escolher uma Herança, você está dizendo quais foram os aspectos
     mais importantes na criação e no crescimento de seu personagem, quais
-    fatores genéticos e ambientais foram predominantes e acabaram por ser
+    fatores genéticos e ambientais foram pemeraldominantes e acabaram por ser
     aflorados, seja pelo seu treino ou pelas condições enfrentadas em vida.
     Mais detalhes sobre as Heranças podem ser vistos no Capítulo 5:
     Personalização do Livro de Regras.`,
@@ -32,7 +36,7 @@ const informacoes_campos = {
       Essa tendência pode refletir como a sua origem encara aspectos como
       lei, religião, magia, tecnologia entre muitos outros que compõem uma
       sociedade, podendo ser escolhidas de forma a refletir aquilo em que seu
-      personagem acredita e como ele se comporta em relação a isso.`,
+      personagem acemeraldita e como ele se comporta em relação a isso.`,
     tamanho: `Quanto ao tamanho, as Origens no geral partilham da mesma classe de
       tamanho Médio que tem entre 1,20 e 2,40 metros, as únicas exceções
       sendo o Yordle que é considerado Pequeno e o Troll que é considerado
@@ -114,8 +118,8 @@ const InformacaoCampo = ({ informacao }: InformacaoCampoProps) => {
         <TooltipTrigger>
           <div className="rounded-full bg-white w-7 h-7 ml-1 pb-1"><h4>?</h4></div>
         </TooltipTrigger>
-        <TooltipContent>
-          <Card className="bg-red-600 max-w-[400px]">
+        <TooltipContent className="bg-transparent">
+          <Card className="bg-emerald-600 max-w-[400px]">
             <CardContent className="items-center justify-center">
               <p>{informacao}</p>
             </CardContent>
@@ -136,7 +140,7 @@ interface InformacaoGlossarioProps{
 export const InformacaoGlossario = ({dados}: InformacaoGlossarioProps) => {
   const [showInfo, setShowInfo] = useState(false);
   return (
-    <Card className="flex items-center justify-center p-4 bg-emerald-400 w-full">
+    <Card className="flex items-center justify-center p-2 md:p-4 bg-[var(--emerald-1)] w-full">
       <CardContent>
         <div  className="flex items-center justify-center">
         <span className="flex items-center justify-center">
@@ -158,6 +162,106 @@ export const InformacaoGlossario = ({dados}: InformacaoGlossarioProps) => {
   )
 }
 
+interface OrigemProps{
+  origem: Origem
+}
+
+export const InformacaoOrigem = ({origem}: OrigemProps) => {
+  const [exibirOrigem, setExibirOrigem] = useState(false);
+  return (
+    <Card className="mt-4">
+          <CardHeader className="flex items-center justify-center">
+              <h4>{origem.nome}</h4> 
+              {exibirOrigem ? (
+                <ArrowUp onClick={() => {setExibirOrigem(!exibirOrigem)}}/>
+              ) : (<ArrowDown onClick={() => {setExibirOrigem(!exibirOrigem)}}/>)}
+          </CardHeader>
+            {(origem && exibirOrigem) && (
+              <CardContent>
+                <div>
+                  <Label>Resumo</Label>
+                  <div className="w-full border-1 border-black rounded-md p-1 mt-2">{origem.resumo}</div>
+                </div>
+                <CardContent className="grid grid-cols-1 md:grid-cols-3 mt-4 gap-4 p-0">
+                  {(origem.quantidade_herancas && origem.quantidade_herancas > 0) && (
+                    <div>
+                    <Label className="mb-2">Heranças: </Label>
+                    <InformacaoGlossario dados={{nome: `${origem.quantidade_herancas} Heranças`, descricao: origem.descricoes_origem.heranca}}/>
+                  </div>
+                  )}
+                  <div>
+                    <Label className="mb-2">Idade: </Label>
+                      <InformacaoGlossario dados={{nome: `Idade Máxima: ${origem.idade_maxima} anos`, descricao: origem.descricoes_origem.idade}} />
+                  </div>
+                  <div>
+                    <Label className="mb-2">Tamanho:</Label>
+                    <InformacaoGlossario dados={{nome: `Entre ${origem.tamanho_minimo}m e ${origem.tamanho_maximo}m`, descricao: origem.descricoes_origem.tamanho}}/>
+                  </div>
+                  <div>
+                    <Label className="mb-2">Deslocamento base:</Label>
+                    <InformacaoGlossario dados={{nome: `${origem.deslocamento} pés (${converter_pes_metros(origem.deslocamento)} metros)`, descricao: origem.descricoes_origem.deslocamento}} />
+                  </div>
+                  <div>
+                    <Label className="mb-2">Idiomas: </Label>
+                    <InformacaoGlossario dados={{nome: `${origem.idiomas.map((idioma) => ('\n' + idioma))} e ${origem.quantidade_idiomas} idiomas adicionais`, descricao: `${origem.descricoes_origem.idiomas} `}}/>
+                  </div>
+                  {origem.pericias && (
+                    <div>
+                    <Label className="mb-2">Perícias:</Label>
+                    <InformacaoGlossario dados={{nome: `${origem.pericias?.length} perícias`, descricao: `${origem.descricoes_origem.pericia}`}} />
+                  </div>
+                  )}
+                  <div>
+                    <Label className="mb-2">Região:</Label>
+                    <InformacaoGlossario dados={{nome: `Região: ${origem.regiao}`, descricao: origem.descricoes_origem.regiao}} />
+                  </div>
+                  {(origem.qtd_oficios && origem.qtd_oficios >= 1 && origem.descricoes_origem.oficio)&& (
+                    <div>
+                    <Label className="mb-2">Ofícios:</Label>
+                    <InformacaoGlossario dados={{nome: `${origem.qtd_oficios} Ofícios`, descricao: origem.descricoes_origem.oficio}} />
+                  </div>
+                  )}
+                  {(origem.qtd_aprimoramentos && origem.qtd_aprimoramentos >= 1 && origem.descricoes_origem.aprimoramento	)&& (
+                    <div>
+                    <Label className="mb-2">Aprimoramentos:</Label>
+                    <InformacaoGlossario dados={{nome: `${origem.qtd_aprimoramentos} Aprimoramentos`, descricao: origem.descricoes_origem.aprimoramento}} />
+                  </div>
+                  )}
+                </CardContent>
+              </CardContent>
+            )}
+            {(origem && origem.habilidades_especiais && exibirOrigem) &&(
+              <CardContent className="bg-emerald-100 rounded-xl pb-4 pt-4">
+              <CardHeader className="flex items-center justify-center">
+              <h4>Traços de Origem</h4>
+              </CardHeader>
+            {( origem.habilidades_especiais.length > 0 && exibirOrigem) && 
+            origem.habilidades_especiais.map((habilidade, index) => (
+              <div key={index} className="mb-4">
+                  <InformacaoHabilidade habilidade={habilidade}/>
+              </div>
+            ))
+            }
+          </CardContent>      
+            )}
+            {(origem && origem.linhagens && exibirOrigem) &&(
+              <CardContent className="bg-emerald-100 rounded-xl pb-4 pt-4 p-1">
+              <CardHeader className="flex items-center justify-center">
+              <h4>Linhagens</h4>
+              </CardHeader>
+            {( origem.linhagens.length > 0) && 
+            origem.linhagens.map((linhagem, index) => (
+              <div key={index} className="mb-4 w-full p-0 m-0">
+                  <InformacaoLinhagem linhagem={linhagem}/>
+              </div>
+            ))
+            }
+          </CardContent>      
+            )}
+          </Card>
+  )
+}
+
 
 interface Variacao{
   nome: string;
@@ -166,9 +270,9 @@ interface Variacao{
   vantagens: string[] | null;
 }
 
-interface HabilidadeEspecial{
-  nome: String,
-  descricao: String,  
+export interface HabilidadeEspecial{
+  nome: string,
+  descricao: string,  
   variacoes: Variacao[] | null,
   resistencias: string[] | null,
   vulnerabilidades: string[] | null,
@@ -191,7 +295,7 @@ interface DescricoesOrigem {
   oficio: string | null,
 }
 
-interface Linhagem{
+export interface Linhagem{
   nome: string;
   descricao: string;
   heranca: string | null;
@@ -215,7 +319,7 @@ export interface Origem{
   quantidade_idiomas: number,
   tamanho_minimo: number,
   tamanho_maximo: number,
-  tipo_tamanho: String,
+  tipo_tamanho: string,
   pericias: string[] | null,
   qtd_aprimoramentos: number | null,
   oficios: string[] | null,
@@ -230,10 +334,19 @@ export interface Origem{
 export function Origens(){
   const [racas, setRacas] = useState<Origem[]>([]);
 
+  const [filtro, setFiltro] = useState<string | null>();
+  const [busca, setBusca] = useState<string | null>();
+
+  const filtros = [
+    "Nome da origem",
+    "Habilidade",
+    "Proficiência"
+  ];
+
   useEffect(() => {
     const fetchOrigens = async () => {
       try {
-        const res = await fetch("http://localhost:8000/");
+        const res = await fetch("https://j1p43lfm-8000.brs.devtunnels.ms/");
         if (!res.ok) {
           throw new Error("Erro ao carregar os dados");
         }
@@ -251,10 +364,10 @@ export function Origens(){
 
   return(
     <div className="flex items-center justify-center w-full h-full mt-10 mb-10">
-      <Card className="w-[95%] bg-gray-200">
-        <CardHeader className="flex flex-col items-center justify-center bg-gray-400 pb-10 rounded-xl ml-4 mr-4">
+      <Card className="w-[95%]">
+        <CardHeader className="flex flex-col items-center justify-center pb-10 rounded-xl ml-4 mr-4">
           <h4>Glossário de Traços</h4>
-          <div className="bg-red-200 grid grid-cols-2 gap-4 mt-4 p-4 rounded-md w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-1 md:p-4 rounded-md w-full">
             <InformacaoGlossario dados={{ nome: "Pontos de Herança", descricao: informacoes_campos.pontos_heranca }} />
             <InformacaoGlossario dados={{ nome: "Idade", descricao: informacoes_campos.longevidade }} />
             <InformacaoGlossario dados={{ nome: "Tendência", descricao: informacoes_campos.tendencia }} />
@@ -265,72 +378,35 @@ export function Origens(){
             <InformacaoGlossario dados={{ nome: "Região", descricao: informacoes_campos.regiao }} />
             <InformacaoGlossario dados={{ nome: "Habilidades Especiais", descricao: informacoes_campos.habilidades_especiais }} />
             <InformacaoGlossario dados={{ nome: "Linhagem", descricao: informacoes_campos.linhagem }} />
-
           </div>
         </CardHeader>
         <CardContent>
-          {racas.map((raca) => (
-            <Card key={raca.nome} className="w-full h-1/2 bg-red-400 m-2">
-              <CardHeader className="flex items-center justify-center">
-                <h4>{raca.nome}</h4>
-              </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center">
-                <h4 className="mb-4">Traços de Origem</h4>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p><strong>Idade: </strong> Até {raca.idade_maxima} anos. <InformacaoCampo informacao={raca.descricoes_origem.idade}/></p>
-                  </div>
-                  <div>
-                  <p><strong>Tamanho: </strong>Entre {raca.tamanho_minimo}m e {raca.tamanho_maximo}m</p>
-                  </div>
-                  <div>
-                  <p><strong>Tipo de Tamanho: </strong>{raca.tamanho}</p>
-                  </div>
-                  <div>
-                    <p><strong>Deslocamento: </strong>{raca.deslocamento} pés (ou {converter_pes_metros(raca.deslocamento).toFixed(0)} metros)</p>
-                  </div>
-                  <div>
-                    <p><strong>Idiomas: </strong>{raca.idiomas.length > 0 ?
-                    raca.idiomas.map((idioma) => (
-                      <p>{idioma} </p>
-                    )) : (<></>)} </p>
-                  </div>
-                  <div>
-                    <p><strong>Perícias: </strong>{raca.descricoes_origem.pericia}</p>
-                  </div>
-                  <div>
-                    <p><strong>Aprimoramentos: </strong>{raca.idade_maxima}</p>
-                  </div>
-                  <div>
-                    <p><strong>Ofícios: </strong>{raca.idade_maxima}</p>
-                  </div>
-                  <div>
-                    <p><strong>Região: </strong>{raca.regiao}</p>
-                  </div>
-                </div>              
-                
-                </CardContent>
-                <CardContent className="flex items-center justify-center">
-                <div>
-                    <span><strong>Características adicionais: </strong>
-                    {(raca.linhagens ?? []).length > 0 ? 
-                      (raca.linhagens ?? []).map((linhagem, index) => (
-                        <div key={index}>
-                          <span>
-                          <strong>
-                          {linhagem.nome}
-                          </strong>
-                          <InformacaoCampo informacao={linhagem.descricao} />
-                          </span>
-                        </div>
-                      )) : 
-                      <>Não possui</>
-                    }
-                    </span>
-                  </div>
-                </CardContent>
-            </Card>
+          <Input placeholder="Pesquisar origens" onChange={(e) => {setBusca(e.target.value)}}/>
+          <Select onValueChange={(e) => {setFiltro(e)}}>
+           <SelectTrigger className="w-auto mt-2 bg-[var(--red-1)]">
+            <SelectValue placeholder="Selecione um filtro" />
+          </SelectTrigger>
+          <SelectContent className="bg-[var(--primary)]">
+          <SelectItem value="Selecione">Selecione um filtro</SelectItem>
+          {filtros.map((filtroM) => (
+            <SelectItem value={filtroM}>{filtroM}</SelectItem>
           ))}
+          </SelectContent>
+          </Select>
+
+            {racas
+            .filter((raca) => {
+              if (!filtro || filtro === "Selecione") return true;
+              if (filtro === "Nome da origem" && busca) return raca.nome.toLowerCase().includes(busca.toLowerCase());
+              if (filtro === "Habilidade" && busca && raca.habilidades_especiais && raca.habilidades_especiais.length > 0) return raca.habilidades_especiais.some((habilidade) => habilidade.nome.toLowerCase().includes(busca.toLowerCase()));
+              if (filtro === "Proficiência" && busca && raca.pericias) return raca.pericias.some((pericia) => pericia.toLowerCase().includes(busca.toLowerCase()));
+              return false;
+            })
+            .map((raca) => (
+              <div key={raca.nome} className="mb-4">
+              <InformacaoOrigem origem={raca} />
+              </div>
+            ))}
         </CardContent>
       </Card>
     </div>

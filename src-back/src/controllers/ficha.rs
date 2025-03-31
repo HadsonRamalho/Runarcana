@@ -1,7 +1,7 @@
 use rocket::{post, serde::json::Json};
 use serde::{Deserialize, Serialize};
 
-use super::informacoes_origens::{AtributosOrigem, TipoRegiao};
+use super::{informacoes_classes::AtributosClasse, informacoes_origens::{AtributosOrigem, TipoRegiao}};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FichaBase{
@@ -11,7 +11,7 @@ pub struct FichaBase{
     pub regiao: TipoRegiao,
     pub passado: TipoPassado,
     pub moral: TipoMoral,
-    pub classe: TipoClasse,
+    pub classe: AtributosClasse,
 
     pub atributos: AtributosPersonagem,
 }
@@ -25,6 +25,13 @@ pub struct AtributosPersonagem{
     pub sabedoria: f32,
     pub carisma: f32,
 
+    pub modificador_forca: f32,
+    pub modificador_destreza: f32,
+    pub modificador_constituicao: f32,
+    pub modificador_inteligencia: f32,
+    pub modificador_sabedoria: f32,
+    pub modificador_carisma: f32,
+
     pub vida_maxima: f32,
     pub vida_atual: f32,
     pub vida_temporaria: f32,
@@ -36,16 +43,8 @@ pub struct AtributosPersonagem{
     
     pub experiencia: f32,
     pub nivel: f32,
-}
 
-#[derive(Serialize, Deserialize, Debug)]
-pub enum TipoClasse{
-    Mercurial(InformacoesClasse)
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct InformacoesClasse{
-
+    pub iniciativa: f32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

@@ -9,12 +9,88 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useEffect, useState } from "react"
-import { converter_pes_metros, InformacaoGlossario, Origem } from "../origens"
+import { converter_pes_metros, HabilidadeEspecial, InformacaoGlossario, InformacaoOrigem, Linhagem, Origem } from "../origens"
+import { ArrowBigDown, ArrowBigUp, ArrowDown, ArrowUp, Info } from "lucide-react"
   
 const origens = [
     "Humano",
     "Antroplantae",
 ];
+
+interface InformacaoLinhagemProps{
+  linhagem: Linhagem
+}
+
+interface InformacaoHabilidadeProps{
+  habilidade: HabilidadeEspecial;
+}
+
+export const InformacaoHabilidade = ({habilidade}: InformacaoHabilidadeProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  return (
+    <Card className="flex items-center justify-center p-4 bg-[var(--red-1)] w-full p-0 m-0">
+      <CardContent className="p-2">
+        <div  className="flex items-center justify-center">
+        <span className="flex items-center justify-center">
+          <strong>{habilidade.nome}</strong>
+        </span>
+        {showInfo ? (
+          <ArrowBigUp onClick={() => setShowInfo(!showInfo)} className="cursor-pointer" />
+        ) : (
+          <ArrowBigDown onClick={() => setShowInfo(!showInfo)} className="cursor-pointer" />
+        )}
+        </div>
+        {showInfo && (
+          <div className="mt-2">
+          <span>{habilidade.descricao}</span>
+          {(habilidade.variacoes && habilidade.variacoes.length > 0) && 
+            habilidade.variacoes.map((variacao) => (
+              <div key={variacao.nome} className="mb-2">
+                <InformacaoGlossario dados={{nome: variacao.nome, descricao: variacao.descricao}}/>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+export const InformacaoLinhagem = ({linhagem}: InformacaoLinhagemProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  return (
+    <Card className="flex items-center justify-center p-4 bg-[var(--red-1)] w-full p-0 m-0">
+      <CardContent className="p-1 m-0">
+        <div  className="flex items-center justify-center">
+        <span className="flex items-center justify-center">
+          <strong>{linhagem.nome}</strong>
+        </span>
+        {showInfo ? (
+          <ArrowBigUp onClick={() => setShowInfo(!showInfo)} className="cursor-pointer" />
+        ) : (
+          <ArrowBigDown onClick={() => setShowInfo(!showInfo)} className="cursor-pointer" />
+        )}
+        </div>
+        {showInfo && (
+          <div className="mt-2">
+          <span>{linhagem.descricao}</span>
+          {linhagem.habilidades_especiais && linhagem.habilidades_especiais.length > 0 && (
+            <div className="flex items-center justify-center">
+            <h4>Traços da Linhagem: </h4>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {(linhagem.habilidades_especiais && linhagem.habilidades_especiais.length > 0) && 
+          linhagem.habilidades_especiais.map((habilidade) => (
+            <InformacaoHabilidade habilidade={habilidade}/>
+          ))}
+          </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
 
 function verifica_modificador(valor: number) {
     switch (valor) {
@@ -43,10 +119,15 @@ function verifica_modificador(valor: number) {
        return 0.
     }
   }
+
 export const CriarFicha = () => {
   const [origens, setOrigens] = useState<Origem[]>([]);
 
   const [origem, setOrigem] = useState<Origem>();
+
+  const [exibirOrigem, setExibirOrigem] = useState(true);
+  const [exibirBasico, setExibirBasico] = useState(true);
+  const [exibirAtributos, setExibirAtributos] = useState(true);
 
   const [forca, setForca] = useState<number>(10);
   const [destreza, setDestreza] = useState<number>(10);
@@ -61,7 +142,7 @@ export const CriarFicha = () => {
   useEffect(() => {
     const fetchOrigens = async () => {
       try {
-        const res = await fetch("http://localhost:8000/");
+        const res = await fetch("https://j1p43lfm-8000.brs.devtunnels.ms/");
         if (!res.ok) {
           throw new Error("Erro ao carregar os dados");
         }
@@ -77,120 +158,109 @@ export const CriarFicha = () => {
   }, []);
 
   return(
-    <div className="w-full mt-8">
-      <Card className="flex items-center justify-center w-[95%]">
+    <div className="w-full mt-8 pr-4">
+      <Card className="flex items-center justify-center md:w-[95%] w-full">
         <h4>Criar Ficha</h4>
-        <CardContent className="w-full">
-          <Card>
+        <CardContent className="w-full p-1">
+          <Card className="mb-4">
             <CardHeader className="flex items-center justify-center">
               <h4>Informações Básicas</h4>
+              {exibirBasico ? (
+                <ArrowUp onClick={() => {setExibirBasico(!exibirBasico)}}/>
+              ) : (
+                <ArrowDown onClick={() => {setExibirBasico(!exibirBasico)}}/>
+              )}
             </CardHeader>
-            <CardContent className="flex items-center justify-center">
-              <div className="w-[40%] mr-10">
-              <Label>Nome do Jogador</Label>
-              <Input placeholder="Nome do Jogador"/>
-              </div>
-              <div className="w-[40%]">
-              <Label>Nome do Personagem</Label>
-              <Input placeholder="Nome do Personagem"/>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="mt-4">
-            <CardHeader className="flex items-center justify-center">
-              <h4>Informações da Origem</h4>
-            </CardHeader>
-            <CardContent className="flex items-center justify-center flex-col">
-              <Label>Origem</Label>
-              <Select onValueChange={(e) => {setOrigem(origens.find((o) => o.nome === e))}}>
-                <SelectTrigger className="w-auto mt-2 bg-emerald-200">
-                  <SelectValue placeholder="Selecione uma origem" />
-                </SelectTrigger>
-                <SelectContent className="bg-emerald-400">
-                  <SelectItem value="Selecione">Selecione uma origem</SelectItem>
-                  {origens.map((origem) => (
-                      <SelectItem key={origem.nome} value={origem.nome}>{origem.nome}</SelectItem>
-                   ))}
-                </SelectContent>
-              </Select>
-            </CardContent>
-            {origem && (
-              <CardContent>
-                <div>
-                  <Label>Resumo</Label>
-                  <div className="w-full border-1 border-black rounded-md p-1 mt-2">{origem.resumo}</div>
+            {exibirBasico && (
+                <CardContent className="p-0 grid grid-cols-1 md:grid-cols-3  w-full gap-4">
+                <div className="w-full mr-10">
+                <Label className="mb-2">Nome do Jogador</Label>
+                <Input placeholder="Nome do Jogador"/>
                 </div>
-                <CardContent className="grid grid-cols-3 mt-4 gap-4">
-                  <div>
-                    <Label className="mb-2">Heranças: </Label>
-                    <InformacaoGlossario dados={{nome: `Quantidade: ${origem.quantidade_herancas}`, descricao: origem.descricoes_origem.heranca}}/>
-                  </div>
-                  <div>
-                    <Label className="mb-2">Idade: </Label>
-                      <InformacaoGlossario dados={{nome: `Idade Máxima: ${origem.idade_maxima} anos`, descricao: origem.descricoes_origem.idade}} />
-                  </div>
-                  <div>
-                    <Label className="mb-2">Tamanho:</Label>
-                    <InformacaoGlossario dados={{nome: `Entre ${origem.tamanho_minimo}m e ${origem.tamanho_maximo}m`, descricao: origem.descricoes_origem.tamanho}}/>
-                  </div>
-                  <div>
-                    <Label className="mb-2">Deslocamento base:</Label>
-                    <InformacaoGlossario dados={{nome: `${origem.deslocamento} pés (${converter_pes_metros(origem.deslocamento)} metros)`, descricao: origem.descricoes_origem.deslocamento}} />
-                  </div>
-                  <div>
-                    <Label>Idiomas: </Label>
-                    <InformacaoGlossario dados={{nome: `Comum e ${origem.quantidade_idiomas} idioma adicional`, descricao: ` ${origem.idiomas + '\n' + origem.descricoes_origem.idiomas + '\n'} `}}/>
-                  </div>
-                  <div>
-                    <Label className="mb-2">Perícias:</Label>
-                    <InformacaoGlossario dados={{nome: `${origem.pericias?.length} perícias`, descricao: `${origem.descricoes_origem.pericia}`}} />
-                  </div>
-                </CardContent>
+                <div className="w-full">
+                <Label className="mb-2">Nome do Personagem</Label>
+                <Input placeholder="Nome do Personagem"/>
+                </div>
+                <div className="w-full">
+                <Label className="mb-2">Nível do Personagem</Label>
+                <Input placeholder="Nível do Personagem" type="number" max={20}/>
+                </div>
               </CardContent>
             )}
           </Card>
 
+
+          {exibirOrigem && (
+                <Card>
+                  <CardContent className="flex items-center justify-center flex-col">
+                <Label>Origem</Label>
+                <Select onValueChange={(e) => {setOrigem(origens.find((o) => o.nome === e))}}>
+                  <SelectTrigger className="w-auto mt-2 bg-[var(--red-1)]">
+                    <SelectValue placeholder="Selecione uma origem" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[var(--primary)]">
+                    <SelectItem value="Selecione">Selecione uma origem</SelectItem>
+                    {origens.map((origem) => (
+                        <SelectItem key={origem.nome} value={origem.nome}>{origem.nome}</SelectItem>
+                     ))}
+                  </SelectContent>
+                </Select>
+              </CardContent>
+                </Card>
+            )}
+
+          {origem && (
+          <InformacaoOrigem origem={origem}/>
+          )}
+
+
           <Card className="mt-4">
             <CardHeader className="flex items-center justify-center">
               <h4>Atributos</h4>
+              {exibirAtributos ? (
+                <ArrowUp onClick={() => {setExibirAtributos(!exibirAtributos)}}/>
+              ) : (
+                <ArrowDown onClick={() => {setExibirAtributos(!exibirAtributos)}} />
+              )}
             </CardHeader>
-            <CardContent className="grid grid-cols-3 gap-4">
-              <div>
-              <Label>Força</Label>
-              <Input type="number" max={30} min={8} onChange={(e) => {setForca(parseInt(e.target.value))}} value={forca}/>
-              <span>Modificador: {verifica_modificador(forca)}</span>
-              </div>
-              <div>
-              <Label>Destreza</Label>
-              <Input type="number" max={30} min={8} onChange={(e) => {setDestreza(parseInt(e.target.value))}} value={destreza}/>
-              <span>Modificador: {verifica_modificador(destreza)}</span>
-              </div>
-              <div>
-              <Label>Constituição</Label>
-              <Input type="number"  max={30} min={8} onChange={(e) => {setConstituicao(parseInt(e.target.value))}} value={constituicao}/>
-              <span>Modificador: {verifica_modificador(constituicao)}</span>
-              </div>
-              <div className="flex flex-col">
-              <Label>Inteligência</Label>
-              <Input type="number" max={30} min={8} onChange={(e) => {setInteligencia(parseInt(e.target.value))}} value={inteligencia}/>
-              <p>Modificador: {verifica_modificador(inteligencia)}</p>
-              </div>
-              <div>
-              <Label>Sabedoria</Label>
-              <Input type="number"  max={30} min={8} onChange={(e) => {setSabedoria(parseInt(e.target.value))}} value={sabedoria}/>
-              <span>Modificador: {verifica_modificador(sabedoria)}</span>
-              </div>
-              <div>
-              <Label>Carisma</Label>
-              <Input type="number" max={30} min={8} onChange={(e) => {setCarisma(parseInt(e.target.value))}} value={carisma}/>
-              <span>Modificador: {verifica_modificador(carisma)}</span>
-              </div>
-              <div>
-              <Label>Classe de Armadura</Label>
-              <Input type="number" max={100} min={8} onChange={(e) => {setClasseDeArmadura(parseInt(e.target.value))}} value={classeDeArmadura}/>
-              </div>
-            </CardContent>
+            {exibirAtributos && (
+                <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                <Label>Força</Label>
+                <Input type="number" max={30} min={8} onChange={(e) => {setForca(parseInt(e.target.value))}} value={forca}/>
+                <span>Modificador: {verifica_modificador(forca)}</span>
+                </div>
+                <div>
+                <Label>Destreza</Label>
+                <Input type="number" max={30} min={8} onChange={(e) => {setDestreza(parseInt(e.target.value))}} value={destreza}/>
+                <span>Modificador: {verifica_modificador(destreza)}</span>
+                </div>
+                <div>
+                <Label>Constituição</Label>
+                <Input type="number"  max={30} min={8} onChange={(e) => {setConstituicao(parseInt(e.target.value))}} value={constituicao}/>
+                <span>Modificador: {verifica_modificador(constituicao)}</span>
+                </div>
+                <div className="flex flex-col">
+                <Label>Inteligência</Label>
+                <Input type="number" max={30} min={8} onChange={(e) => {setInteligencia(parseInt(e.target.value))}} value={inteligencia}/>
+                <p>Modificador: {verifica_modificador(inteligencia)}</p>
+                </div>
+                <div>
+                <Label>Sabedoria</Label>
+                <Input type="number"  max={30} min={8} onChange={(e) => {setSabedoria(parseInt(e.target.value))}} value={sabedoria}/>
+                <span>Modificador: {verifica_modificador(sabedoria)}</span>
+                </div>
+                <div>
+                <Label>Carisma</Label>
+                <Input type="number" max={30} min={8} onChange={(e) => {setCarisma(parseInt(e.target.value))}} value={carisma}/>
+                <span>Modificador: {verifica_modificador(carisma)}</span>
+                </div>
+                <div>
+                <Label>Classe de Armadura</Label>
+                <Input type="number" max={100} min={8} onChange={(e) => {setClasseDeArmadura(parseInt(e.target.value))}} value={classeDeArmadura}/>
+                </div>
+              </CardContent>
+            )}      
           </Card>
 
         </CardContent>

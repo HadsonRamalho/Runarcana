@@ -6,6 +6,7 @@ import PrivateRoute from "./privateRoute";
 import { Prohibited } from "@/pages/prohibited";
 import { Origens } from "@/pages/origens";
 import { CriarFicha } from "@/pages/criar_ficha";
+import { Classes } from "@/pages/classes";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/criar_ficha",
     element: <CriarFicha />,
+  },
+  {
+    path: "/classes",
+    element: <Classes />,
   },
   {
     path: "/logado",

@@ -1,4 +1,4 @@
-import { Calendar, Home, HomeIcon, Inbox, NotebookIcon, Search, Settings, User2Icon } from "lucide-react"
+import { Calendar, Home, HomeIcon, Inbox, NotebookIcon, Search, Settings, SwordsIcon, User2Icon } from "lucide-react"
 
 import {
   Sidebar,
@@ -30,6 +30,11 @@ const items = [
     icon: <RacasIcon />
   },
   {
+    title: "Classes",
+    url: "/classes",
+    icon: <SwordsIcon />  
+  },
+  {
     title: "Configurações",
     url: "/",
     icon: <Settings/>
@@ -39,7 +44,7 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="bg-[hsl(var(--background))]">
         <SidebarGroup>
           <SidebarGroupLabel>Runarcana</SidebarGroupLabel>
           <SidebarGroupContent>
