@@ -33,14 +33,19 @@ pub struct AtributosClasse{
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InformacoesConjuracao{
-    qtd_truques: f32,
+    qtd_truques: String,
     lista_magia: String,
-    qtd_magias: f32,
+    qtd_magias_inicial: u32,
 
     habilidade_conjuracao: String,
 
-    cd_magia: f32,
-    ataque_magia: f32,
+    info_truques: String,
+    info_espacos_magia: String,
+    info_magias_conhecidas: String,
+    info_habilidade_conjuracao: String,
+
+    cd_magia: String,
+    ataque_magia: String,
 
     conjuracao_ritual: Option<String>,
     foco_conjuracao: Option<String>,
@@ -105,6 +110,320 @@ pub struct Subclasse{
 }
 
 pub fn info_mercurial() -> AtributosClasse{
+
+    let subclasse_4 = Subclasse{
+        nome: "Trapaceiro Rúnico".to_string(),
+        descricao: "Alguns mercuriais aprimoram suas finas perícias de furtividade e
+        agilidade com magia, aprendendo truques de encantamento e ilusão.
+        Esses ladinos incluem não somente batedores de carteira e assaltantes,
+        mas também trapaceiros, enganadores e um número significativo de
+        aventureiros.".to_string(),
+        proficiencias_armaduras: None,
+        proficiencias_armas: None,
+        proficiencias_oficios: None,
+        proficiencias_salvaguardas: None,
+        proficiencias_pericias: None,
+        informacoes_conjuracao: Some(
+        InformacoesConjuracao{
+            qtd_truques: "Ao escolher essa subclasse, você adquire a habilidade de conjurar
+            magias. Veja o Capítulo 10 para as regras gerais de conjuração e para a
+            lista de magias de Mercurial.".to_string(),
+            lista_magia: "Mercurial".to_string(),
+            habilidade_conjuracao: "Carisma".to_string(),
+            cd_magia: "8 + seu bônus de proficiência + Seu modificador de Carisma".to_string(),
+            ataque_magia: "seu bônus de proficiência + seu modificador de Carisma".to_string(),
+            conjuracao_ritual: None,
+            foco_conjuracao: None,
+            info_espacos_magia: "A tabela Mercurial Conjurador mostra quantos Espaços de Magia
+            você tem para lançar suas magias de 1o nível ou maior. Para lançar
+            uma dessas magias, você deve gastar um espaço no nível da magia
+            ou superior. Você recupera todas os espaços gastos quando termina
+            um longo descanso.
+            Por exemplo, se você conhece a magia enfeitiçar pessoa de 1o nível
+            e tem um espaço de magia de 1o e 2o nível disponível, você pode
+            conjurar enfeitiçar pessoa usando um dos espaços.".to_string(),
+            info_habilidade_conjuracao: "Carisma é a sua habilidade de lançar magias para suas magias de
+            Trapaceiro Rúnico, uma vez que o poder de sua magia depende do
+            roubo de conhecimento daqueles ao seu redor.
+            Você usa seu Carisma sempre que uma magia se refere à sua
+            habilidade de lançar feitiços. Além disso, você usa seu modificador
+            de Carisma para definir a CD da salvaguarda para as magias de
+            Mercurial que você conjura e quando você realiza uma jogada de
+            ataque com uma magia.".to_string(),
+            info_magias_conhecidas: "
+            No 3o nível você conhece três magias de Mercurial de 1o nível de sua
+            escolha. A coluna magias conhecidas mostra quando você aprende
+            mais magias do 1o nível ou superior. Cada uma dessas magias
+            deve estar em um nível para o qual você tem espaços de magia.
+            Por exemplo, quando você atingir o 8o nível nesta classe, poderá
+            aprender uma nova magia de 1o ou 2o nível.
+            Sempre que você ganhar um nível nesta classe, poderá substituir uma
+            das magias de Mercurial que você conhece por outra de sua escolha
+            na lista de magias do Mercurial. A nova magia deve ser de um nível
+            para o qual você tenha espaços de magia.".to_string(),
+            info_truques: "Você aprende três truques: mãos mágicas e outros dois truques, à sua
+            escolha, da lista de magias de Mercurial. Você aprende um truque de
+            Mercurial adicional, à sua escolha, no 10o nível.".to_string(),
+            qtd_magias_inicial: 0
+        }
+        ),
+        habilidades: None, // IMPLEMENTAR
+        variacoes: None, // IMPLEMENTAR
+    };
+
+    let subclasse_3 = Subclasse{
+        nome: "Explorador".to_string(),
+        descricao: "Desbravar catacumbas soterradas, envolver-se com antigas maldições
+        e superar com facilidade as situações mais improváveis. Sua coragem e
+        ousadia não têm limites e você prefere resolver as coisas no improviso,
+        confiando parcialmente no seu talento, mas muito mais em sua sorte e
+        conhecimento. Exploradores normalmente se interessam pelas coisas
+        mais estranhas e aleatórias, como cartografia avançada, mecânica
+        hextec, histórias antigas de Runeterra entre outros conhecimentos.
+        Os Exploradores normalmente atuam como caçadores de tesouro
+        profissionais, exploradores de masmorras e investigadores. Além de
+        aprimorar sua agilidade e furtividade, você aprende perícias úteis para
+        desbravar ruínas antigas, ler idiomas incomuns e usar itens mágicos que
+        normalmente não poderia.".to_string(),
+        proficiencias_armaduras: None,
+        proficiencias_armas: None,
+        proficiencias_oficios: None,
+        proficiencias_salvaguardas: None,
+        proficiencias_pericias: None,
+        informacoes_conjuracao: None,
+        habilidades: Some(vec![
+        HabilidadeClasse{
+            nome: "Sem Barreiras".to_string(),
+            descricao: "Ao seguir as filosofias dessa cabala você aprende dois idiomas
+            adicionais à sua escolha da lista de idiomas comuns no
+            Capítulo 4: Detalhamento - Idiomas. Além disso, escolha
+            mais 4 idiomas, você não é capaz de falar, escrever ou ler
+            neles, mas é capaz de identificá-los seja ouvindo ou lendo.
+            Ao atingir os níveis 7o, 13o e 19o você pode aprender um
+            idioma à sua escolha (você pode falar, ler e escrever nele).
+            Você adquire a habilidade de escalar mais rápido que o
+            normal. Escalar não possui custo adicional de movimento
+            para você. Além disso, quando você fizer um salto com
+            corrida, o alcance que pode saltar aumenta um número
+            de pés igual ao seu modificador de Destreza.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Conhecimento Avançado".to_string(),
+            descricao: "A partir do 3o nível, você consegue sintonizar sua
+            intuição e sua percepção de forma extraordinária,
+            recordando-se de plantas de construções,
+            diagramas de engrenagens e etc. Você pode usar
+            a sua ação bônus concedida pela Ação Ardilosa
+            para fazer um teste de Prestidigitação, usar suas
+            ferramentas de chaveiro para desarmar uma
+            armadilha ou abrir uma fechadura, ou realizar a ação
+            de Usar um Objeto. Além disso você recebe proficiência
+            em Prestidigitação, caso já possua proficiência você
+            ganha Especialista nessa perícia, adicionalmente você
+            recebe proficiência com um ofício adicional à sua escolha.
+            Graças a esse conhecimento e percepção, apoiado pela
+            sua intuição que o sintoniza quanto à existência de armadilhas, você pode localizar armadilhas a até 120 pés de de você.
+            Uma vez que você tenha usado essa habilidade, você deve realizar um
+            descanso longo antes de usá-la novamente. Caso algum aliado ative
+            ou desarme alguma armadilha que você não tenha localizado, você
+            recarrega o uso dessa habilidade. No 6o nível, seu alcance com essa
+            habilidade se amplia para 300 pés e você sabe a direção precisa de
+            qualquer armadilha detectada por essa habilidade.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Esquiva Sobrenatural".to_string(),
+            descricao: "A partir do 5o nível, quando um inimigo que você possa ver o acerta
+            com um ataque, você pode usar sua reação para reduzir pela metade o
+            dano sofrido.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Evasão".to_string(),
+            descricao: "A partir do 7o nível, você pode esquivar-se agilmente de certos efeitos
+            em área, como o sopro flamejante de um dragão infernal ou uma magia
+            tempestade glacial. Quando você for alvo de um efeito que exija uma
+            salvaguarda de Destreza para sofrer metade do dano, você não sofre
+            dano algum se passar, e somente metade do dano se falhar.".to_string(),
+            variacoes: None,
+            caracteristicas: None
+        },
+        HabilidadeClasse{
+            nome: "Aprendizado Rápido".to_string(),
+            descricao: "A partir do 9o nível, você possui habilidades reconhecíveis para agrupar
+            novas informações e se comprometer aos estudos. Você sempre sabe
+            quando alguém está mentindo para você (ou simplesmente não sabe a
+            resposta). Enquanto você estiver em uma região ou cidade desconhecida
+            ou pouco familiar, você pode gastar 10 PO e 3 horas estudando para
+            lhe garantir vantagem em testes de Arcanismo, História, Natureza ou
+            Religião relacionados sobre a cidade ou região pela próxima semana.
+            Você também sabe as criaturas nativas da região. Adicionalmente, você
+            tem vantagem no teste de Furtividade se você não mover-se mais do que
+            a metade de seu deslocamento em um turno.".to_string(),
+            variacoes: None,
+            caracteristicas: None
+        },
+        HabilidadeClasse{
+            nome: "Talento Confiável".to_string(),
+            descricao: "No 11o nível, você refinou suas perícias beirando à perfeição. Toda vez
+            que você fizer um teste de perícia no qual possa adicionar seu bônus de
+            proficiência, você trata um resultado no d20 de 9 ou menor como 10.
+            Adicionalmente você pode escolher uma perícia que você tenha
+            proficiência para receber os benefícios da habilidade
+            Especialização.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Explorador de Catacumbas".to_string(),
+            descricao: "No 13o nível, você já foi exposto à grandes variedades
+            de venenos e toxinas, criando uma resistência natural
+            à eles, por conta disso você possui vantagem em
+            salvaguardas de Constituição para resistir à condição
+            Envenenado e Intoxicado. Além disso, você recebe
+            resistência à dano venenoso. Adicionalmente,
+            você aprende o suficiente sobre como a magia
+            funciona e pode improvisar o uso de itens que
+            nem mesmo foram destinados a você, também
+            podendo utilizar a magia identificar um número
+            de vezes igual ao seu modificador de Inteligência
+            por descanso longo de forma não mágica sem
+            utilizar quaisquer componentes. Você ignora todos
+            os requisitos de classes, origem e níveis para uso de
+            qualquer item mágico.".to_string(),
+            variacoes: None,
+            caracteristicas: None
+        },
+        HabilidadeClasse{
+            nome: "Reflexos de Explorador".to_string(),
+            descricao: "Quando atinge o 17o nível, você se torna
+            adepto em fazer emboscadas e fugas rápidas
+            de situações perigosas. Você pode realizar
+            dois turnos durante a primeira rodada de cada
+            combate. Você realiza seu primeiro turno na sua
+            iniciativa e o segundo na ordem 10 da iniciativa.
+            Você não pode usar essa característica quando
+            está surpreso.".to_string(),
+            variacoes: None,
+            caracteristicas: None
+        }
+        ]),
+        variacoes: None,
+    };
+
+    let subclasse_2 = Subclasse{
+        nome: "Assassino".to_string(),
+        descricao: "Você focou seu treinamento na macabra arte da morte. Aqueles que
+        devotam-se a essa Cabala são diversos: assassinos de aluguel, espiões,
+        caçadores de recompensa e, até mesmo, padres especialmente treinados
+        em exterminar os inimigos das suas divindades. Subterfúgio, veneno
+        e disfarces ajudam você a eliminar seus oponentes com eficiência
+        mortífera.".to_string(),
+        proficiencias_armaduras: None,
+        proficiencias_armas: None,
+        proficiencias_oficios: Some(vec!["Maquiador".to_string(), "Venefício".to_string()]),
+        proficiencias_salvaguardas: None,
+        proficiencias_pericias: None,
+        informacoes_conjuracao: None,
+        habilidades: Some(vec![
+        HabilidadeClasse{
+            nome: "Movimento do Pulso".to_string(),
+            descricao: "A partir do 3o nível, você pode usar a ação bônus para lançar uma adaga.
+            Além disso, se você errar o alvo, a adaga lançada retornará à sua mão.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Esquiva Sobrenatural".to_string(),
+            descricao: "A partir do 5o nível, quando um inimigo que você possa ver o acerta
+            com um ataque, você pode usar sua reação para reduzir pela metade o
+            dano sofrido.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Espreitar".to_string(),
+            descricao: "A partir do 7o nível, você aprendeu maneiras mais eficazes de se espreitar
+            até seu alvo, você deve escolher entre uma dessas habilidades.".to_string(),
+            caracteristicas: None,
+            variacoes: Some(vec![
+            VariacaoHabilidadeClasse{
+                nome: "Invisibilidade".to_string(),
+                descricao: "Usando uma ação bônus, no começo de seu
+                próximo turno você recebe os efeitos da magia invisibilidade.
+                Você pode fazer isso um número de vezes igual a seu modificador
+                de Inteligência a cada descanso longo. Enquanto invisível, sua
+                movimentação aumenta em 10 pés.".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Shunpo".to_string(),
+                descricao: "Usando uma ação bônus, você pode se teleportar para trás
+                de um alvo a até 30 pés de você ou em uma arma que você tenha
+                lançado. Você pode usar essa habilidade um número de vezes igual
+                a seu modificador de Inteligência a cada descanso longo. Caso você
+                mate uma criatura, você pode utilizar essa habilidade novamente
+                até o fim do próximo turno sem gastar um de seus usos por dia.".to_string()
+            }])
+        },
+        HabilidadeClasse{
+            nome: "Silenciosamente Mortal".to_string(),
+            descricao: "No 9o nível, você treinou para quase não fazer barulho enquanto
+            perseguia seus alvos, e pode se mover toda sua movimentação ou usar
+            ação disparada sem penalidade furtiva. Você tem vantagem nos testes de
+            Furtividade que envolvem som, e não pode ser detectado por criaturas
+            que possuem sentido sísmico. Você também ganha visão no escuro até
+            60 pés, se você já tem visão no escuro, dobre o alcance.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Ataque de Investida".to_string(),
+            descricao: "A partir do 11o nível, você aprende a atingir inimigos fora de seu alcance.
+            Ao usar sua ação para fazer um ataque com uma arma de acuidade que
+            você possui proficiência em um inimigo fora de seu alcance, você pode
+            saltar 10 pés em direção ao alvo. Esse salto não é considerado parte da
+            sua movimentação e ele ignora terreno difícil. Se o ataque atingir o alvo,
+            você pode adicionar o dano de seu Ataque Furtivo, e independente da
+            rolagem, o dano é considerado um acerto crítico.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Fenda na Armadura".to_string(),
+            descricao: "Quando você está no nível 13, você ganhou habilidade suficiente para
+            saber onde atacar seu oponente para causar o maior dano. Agora você
+            tem um alcance crítico de 19 ou 20.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Espreita Fantasmagórica".to_string(),
+            descricao: "No 17o nível, nenhum alvo pode se esconder da sua vista, sua habilidade
+            Espreitar ganha uma melhoria conforme abaixo.".to_string(),
+            caracteristicas: Some(vec![
+            CaracteristicaHabilidadeClasse{
+                nome: "Característica 1".to_string(),
+                descricao: "Caso você tenha escolhido Invisibilidade, você ganha os efeitos da magia
+                ver o invisível o tempo todo.".to_string(),
+                caracteristicas: None,
+                variacoes: None
+            },
+            CaracteristicaHabilidadeClasse{
+                nome: "Característica 2".to_string(),
+                descricao: "Caso você tenha escolhido Shunpo, você não tem limites de uso para essa habilidade.".to_string(),
+                caracteristicas: None,
+                variacoes: None
+            }
+            ]),
+            variacoes: None
+        }
+        ]),
+        variacoes: None,
+    };
 
     let subclasse_1 = Subclasse{
         nome: "Ás Rúnico".to_string(),
@@ -477,7 +796,7 @@ alcance se torna 60/ 120 pés.".to_string(),
         reflete seu treinamento e foco, não necessariamente a sua profissão, mas
         ela delineia as pessoas com as quais você tem contato e onde obtém sua
         instrução.".to_string()),
-        lista_subclasses: Some(vec![subclasse_1]),
+        lista_subclasses: Some(vec![subclasse_1, subclasse_2, subclasse_3, subclasse_4]),
         habilidades: Some(vec![
         HabilidadeClasse{
             nome: "Especialização".to_string(),

@@ -120,7 +120,7 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
           <Card className="w-max m-2 p-2 gap-2 w-full">
           <Label className="mb-0">Proficiências em Armaduras:</Label>
           {classe.proficiencias_armaduras?.map((proficiencia) => (
-            <li className="mt-0 pt-0">
+            <li className="mt-0 pt-0 ml-4">
               {proficiencia}
             </li>
           ))}
@@ -128,7 +128,7 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
           <Card className="w-max m-2 p-2 gap-2 w-full">
             <Label className="mb-0">Proficiências em Armas: </Label>
             {classe.proficiencias_armas?.map((proficiencia) => (
-              <li className="mt-0 pt-0">
+              <li className="mt-0 pt-0 ml-4">
                 {proficiencia}
               </li>
             ))}
@@ -136,7 +136,7 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
           <Card className="w-max m-2 p-2 gap-2 w-full">
             <Label className="mb-0">Proficiências em Ofícios: </Label>
             {classe.proficiencias_oficios?.map((proficiencia) => (
-              <li className="mt-0 pt-0">
+              <li className="mt-0 pt-0 ml-4">
                 {proficiencia}
               </li>
             ))}
@@ -144,7 +144,7 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
           <Card className="w-max m-2 p-2 gap-2 w-full">
             <Label className="mb-0">Proficiências em Salvaguardas: </Label>
             {classe.proficiencias_salvaguardas?.map((proficiencia) => (
-              <li className="mt-0 pt-0">
+              <li className="mt-0 pt-0 ml-4">
                 {proficiencia}
               </li>
             ))}
@@ -153,7 +153,7 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
             <Card className="w-max m-2 p-2 gap-2 w-full">
             <Label className="mb-0">Proficiências em Perícias: </Label>
             {classe.proficiencias_pericias?.map((proficiencia) => (
-              <li className="mt-0 pt-0">
+              <li className="mt-0 pt-0 ml-4">
                 {proficiencia}
               </li>
             ))}
@@ -162,14 +162,12 @@ const CardInformacoesClasse = ({classe}: CardInfoClasseProps) => {
           <Card className="w-max m-2 p-2 gap-2 w-full">
             <Label className="mb-0">Opções de Perícias: </Label>
             {classe.opcoes_pericias?.map((opcao) => (
-              <li className="mt-0 pt-0">
+              <li className="mt-0 pt-0 ml-4">
                 {opcao}
               </li>
             ))}
           </Card>
           </div>
-          
-          
         </TabsContent>
         <TabsContent value="caracteristicas">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 m-2">
@@ -206,7 +204,7 @@ export const Classes = () => {
   useEffect(() => {
     const fetchOrigens = async () => {
       try {
-        const res = await fetch("https://j1p43lfm-8000.brs.devtunnels.ms/classes");
+        const res = await fetch("https://g6v9psc0-3060.brs.devtunnels.ms/classes");
         if (!res.ok) {
           throw new Error("Erro ao carregar os dados");
         }

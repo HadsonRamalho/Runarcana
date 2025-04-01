@@ -10,5 +10,6 @@ fn rocket() -> _ {
     .mount("/", routes![lista_origens])
     .mount("/", routes![lista_classes])
     .attach(Cors::from_options(&CorsOptions::default()
-        .allowed_origins(AllowedOrigins::All)).unwrap())
+    .allowed_origins(AllowedOrigins::All)).unwrap())
+    .configure(rocket::Config::figment().merge(("port", 3060)))
 }
