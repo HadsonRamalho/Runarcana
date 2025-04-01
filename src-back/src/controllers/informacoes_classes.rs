@@ -1,4 +1,4 @@
-use rocket::{get, post, route, serde::json::Json};
+use rocket::{get, http::hyper::header::VARY, post, route, serde::json::Json};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -167,8 +167,203 @@ pub fn info_mercurial() -> AtributosClasse{
             qtd_magias_inicial: 0
         }
         ),
-        habilidades: None, // IMPLEMENTAR
-        variacoes: None, // IMPLEMENTAR
+        habilidades: Some(vec![
+        HabilidadeClasse{
+            nome: "Roubo de Feitiços".to_string(),
+            descricao: "No 5o nível, você pode furtar a habilidade mágica de seu alvo.
+            Ao acertar um oponente com um ataque furtivo bem-sucedido,
+            você pode optar por renunciar ao dano de ataque furtivo e
+            tentar roubar um feitiço do alvo. Se o alvo estiver próximo,
+            você pode roubar uma magia com uma ação de toque.
+            Você pode escolher qual magia roubar, se for conhecida;
+            caso contrário, o Mestre determinará a magia roubada
+            aleatoriamente a partir do nível que você solicitar.
+            Se você tentar roubar uma magia que não tem
+            mais espaços, a magia roubada é determinado aleatoriamente dentre aqueles que o alvo tem disponível.
+
+            Você pode roubar uma magia de um nível para o qual você tem espaços automaticamente ao acertar. Você pode tentar roubar 
+            uma magia de nível superior com uma verificação de habilidade bem-sucedida usando sua habilidade de lançar magias.
+            O CD é igual a 12 + o nível da magia.
+            O alvo de um ataque furtivo perde a capacidade de lançar a magia 
+            roubada. Por até 1 hora, em um turno subsequente, você pode lançar a 
+            magia uma vez como uma ação sem gastar um espaço de magia. Uma 
+            vez que a magia foi lançada ou o tempo expirou, o alvo recupera a 
+            capacidade de lançar a magia.
+            Por exemplo, no 7º nível contra um Arcano do 5º nível, você pode tentar 
+            roubar bola de fogo, uma magia de 3º nível. Assumindo que o Arcano 
+            conhece a magia e tem espaços de terceiro nível restantes, você faz uma 
+            salvaguarda de Carisma com CD 15. O Arcano perde a capacidade de 
+            lançar bola de fogo durante esse tempo.
+            A qualquer momento, você pode possuir um número máximo de níveis 
+            de magias roubadas igual ao seu nível de classe. Por exemplo, no 4º 
+            nível, você pode ter duas magias de 2º nível roubadas, ou uma magia 
+            de 2º nível e duas magias de 1º nível, ou qualquer outra combinação de 
+            feitiços, totalizando quatro níveis. Se você roubar um feitiço que exceda 
+            esse limite, você deve optar por perder magias roubadas suficientes para 
+            reduzir o número total de níveis de magias roubadas para não mais que 
+            o máximo.".to_string(),
+            caracteristicas: None,
+            variacoes: Some(vec![
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 1".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 0".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 2".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 0".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 3".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 3 | Magias Nível 1: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 4".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 4 | Magias Nível 1: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 5".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 4 | Magias Nível 1: 3".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 6".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 4 | Magias Nível 1: 3".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 7".to_string(),
+                descricao: "Truques Conhecidos: 2 | Magias Conhecidas: 5 | Magias Nível 1: 4".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 8".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 6 | Magias Nível 1: 4".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 9".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 6 | Magias Nível 1: 4 | Magias Nível 2: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 10".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 7 | Magias Nível 1: 4 | Magias Nível 2: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 11".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 8 | Magias Nível 1: 4 | Magias Nível 2: 3".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 12".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 8 | Magias Nível 1: 4 | Magias Nível 2: 3".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 13".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 9 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 14".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 10 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 15".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 10 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 16".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 11 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 3".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 17".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 11 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 18".to_string(),
+                descricao: "Truques Conhecidos: 3 | Magias Conhecidas: 11 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 19".to_string(),
+                descricao: "Truques Conhecidos: 4 | Magias Conhecidas: 12 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2 | Magias Nível 4: 1".to_string(),
+            },
+            VariacaoHabilidadeClasse{
+                nome: "Espaços de Magia no Nível 20".to_string(),
+                descricao: "Truques Conhecidos: 4 | Magias Conhecidas: 13 | Magias Nível 1: 4 | Magias Nível 2: 3 | Magias Nível 3: 2 | Magias Nível 4: 1".to_string(),
+            },
+            ])
+
+        },
+        HabilidadeClasse{
+            nome: "Vórtice Mágico".to_string(),
+            descricao: "A partir do 3º nível, você possui uma habilidade inata de anular magia, 
+            uma vez por dia você pode cancelar uma magia direcionada a você com 
+            nível equivalente ao seu nível de conjuração máxima. Você pode usar 
+            sua reação para forçar a criatura a realizar um teste de resistência com o 
+            modificador de atributo de conjuração dele. A CD é igual a 10 + bônus 
+            de proficiência + seu modificador de Carisma. No nível 6 sobe para 2 
+            vezes ao dia, no 12 para 3 e no 18 para quatro.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Evasão".to_string(),
+            descricao: "A partir do 7º nível, você pode esquivar-se agilmente de certos efeitos 
+            em área, como o sopro flamejante de um dragão infernal ou uma magia 
+            tempestade glacial. Quando você for alvo de um efeito que exige uma 
+            salvaguarda de Destreza para sofrer metade do dano, você não sofre 
+            dano algum se passar, e somente metade do dano se falhar.".to_string(),
+            caracteristicas: None,
+            variacoes: None,
+        },
+        HabilidadeClasse{
+            nome: "Emboscada Mágica".to_string(),
+            descricao: "A partir do 9º nível, se você estiver escondido de uma criatura quando 
+            conjurar uma magia nela, a criatura terá desvantagem em qualquer 
+            salvaguarda que ela fizer contra a magia nesse turno.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        },
+        HabilidadeClasse{
+            nome: "Vitalidade Arcana".to_string(),
+            descricao: "A partir do 11ª nível, todas as vezes em que você roubar um feitiço, 
+            você também recupera o seu bônus de proficiência + o nível da magia 
+            roubada em pontos de vida. Além disso, ao usar uma magia roubada 
+            para causar dano em algum alvo, você também recupera metade do 
+            dano causado em pontos de vida.".to_string(),
+            caracteristicas: None,
+            variacoes: None,
+        },
+        HabilidadeClasse{
+            nome: "Roubar Efeito Mágico".to_string(),
+            descricao: "A partir do 13º nível, você pode extrair um efeito de magia ativo de 
+            outra criatura. Ao acertar um oponente com um ataque furtivo bem-
+            sucedido, você pode optar por renunciar ao dano de ataque furtivo e, 
+            em vez disso, obter o efeito de uma única magia que afeta o alvo. Se o 
+            alvo estiver adjacente, você pode roubar um efeito de magia com uma 
+            ação de toque.
+            Você pode escolher qual efeito roubar; caso contrário, o Mestre 
+            determina o efeito da magia roubada aleatoriamente. Se você tentar 
+            roubar um efeito de magia que não está presente, o efeito de magia 
+            roubado será determinado aleatoriamente dentre aqueles atualmente em vigor no alvo. Você não pode roubar um efeito de magia se o nível 
+            do conjurador da magia exceder o seu nível de classe + o modificador 
+            de Carisma.
+            Ao roubar um efeito de magia, você ganha o efeito roubado (e a criatura 
+            original perde esse efeito) por 1 minuto (ou até que a duração da 
+            magia expire, o que ocorrer primeiro). Se a duração do efeito mágico 
+            não expirar nesse período, o efeito mágico retornará à criatura que 
+            originalmente se beneficiou dele.
+            Essa habilidade não funciona em efeitos de feitiços que são imunes a 
+            dissipar magia.".to_string(),
+            caracteristicas: None,
+            variacoes: None,
+        },
+        HabilidadeClasse{
+            nome: "Absorver Feitiço".to_string(),
+            descricao: "A partir do 17º nível, quando você é alvejado por uma magia ou estiver 
+            na área de efeito de uma, pode optar por absorver o feitiço. Fazer isso 
+            nega os efeitos da magia e a magia é adicionado à sua lista de magias 
+            roubadas, se possível. A magia está sujeita às mesmas regras que uma 
+            magia roubada pela habilidade de roubo de feitiço.
+            Essa habilidade pode ser usada uma vez por um descanso longo.".to_string(),
+            caracteristicas: None,
+            variacoes: None
+        }
+        ]), // Refatorar espaços de magia para tipo próprio
+        variacoes: None, 
     };
 
     let subclasse_3 = Subclasse{

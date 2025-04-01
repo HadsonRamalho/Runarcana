@@ -142,7 +142,7 @@ export const CriarFicha = () => {
   useEffect(() => {
     const fetchOrigens = async () => {
       try {
-        const res = await fetch("https://g6v9psc0-3060.brs.devtunnels.ms/");
+        const res = await fetch("http://localhost:3060/");
         if (!res.ok) {
           throw new Error("Erro ao carregar os dados");
         }

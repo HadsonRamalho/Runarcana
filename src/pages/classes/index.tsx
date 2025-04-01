@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AtributosClasse, HabilidadeClasse, Subclasse } from "@/interfaces/classe"
+import { AtributosClasse, HabilidadeClasse, InformacoesConjuracao, Subclasse, VariacaoHabilidadeClasse } from "@/interfaces/classe"
 import { Eye } from "lucide-react"
 import { useEffect, useState } from "react"
 import { InformacaoGlossario } from "../origens"
@@ -21,6 +21,55 @@ interface InfoHabilidadeProps{
   habilidade: HabilidadeClasse;
 }
 
+interface InfoConjuracaoProps{
+  info: InformacoesConjuracao;
+}
+
+const CardInfoConjuracao = ({info}: InfoConjuracaoProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  return(
+    <Card className="w-full">
+      <CardHeader className="flex justify-center items-center gap-2">
+        <h4>Habilidade de Conjuração: <strong>{info.habilidade_conjuracao}</strong>
+        </h4>
+        <h4>
+        Magias no Nível 1: <strong>{info.qtd_magias_inicial}</strong>
+        </h4>
+        <Eye onClick={() => {setShowInfo(!showInfo)}}/>
+
+      </CardHeader>
+      {showInfo && (
+        <CardContent>
+        {info.qtd_truques}
+      </CardContent>
+      )}
+    </Card>
+  )
+}
+
+interface InfoVariacaoHabilidadeProps{
+  habilidade: VariacaoHabilidadeClasse;
+}
+
+const CardInfoVariacaoHabilidade = ({habilidade}: InfoVariacaoHabilidadeProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  return(
+    <Card className="w-full">
+      <CardHeader className="flex justify-center items-center gap-2">
+        <h4>{habilidade.nome}
+        </h4>
+        <Eye onClick={() => {setShowInfo(!showInfo)}}/>
+
+      </CardHeader>
+      {showInfo && (
+        <CardContent>
+        {habilidade.descricao}
+      </CardContent>
+      )}
+    </Card>
+  )
+}
+
 const CardInfoHabilidade = ({habilidade}: InfoHabilidadeProps) => {
   const [showInfo, setShowInfo] = useState(false);
   return(
@@ -34,6 +83,13 @@ const CardInfoHabilidade = ({habilidade}: InfoHabilidadeProps) => {
       {showInfo && (
         <CardContent>
         {habilidade.descricao}
+        {habilidade.variacoes && (
+          habilidade.variacoes.map((variacao) => (
+            <div className="m-4">
+              <CardInfoVariacaoHabilidade habilidade={variacao}/>
+            </div>
+          ))
+        )}
       </CardContent>
       )}
     </Card>
@@ -69,7 +125,7 @@ const CardInfoSubclasse = ({subclasse}: InfoSubclasseProps) => {
             <SelectValue placeholder="Selecione uma habilidade" />
           </SelectTrigger>
           <SelectContent className="bg-[var(--primary)]">
-          <SelectItem value="Selecione">Selecione uma origem</SelectItem>
+          <SelectItem value="Selecione">Selecione uma habilidade</SelectItem>
           {subclasse.habilidades?.map((habilidade) => (
             <SelectItem key={habilidade.nome} value={habilidade.nome}>{habilidade.nome}</SelectItem>
           ))}
@@ -85,6 +141,10 @@ const CardInfoSubclasse = ({subclasse}: InfoSubclasseProps) => {
             skill.caracteristicas?.map((habilidade) => (
               <CardInfoHabilidade habilidade={habilidade}/>
             ))
+          )}
+          
+          {subclasse.informacoes_conjuracao && (
+            <CardInfoConjuracao info={subclasse.informacoes_conjuracao}/>
           )}
           </div>
           </div>
@@ -204,7 +264,7 @@ export const Classes = () => {
   useEffect(() => {
     const fetchOrigens = async () => {
       try {
-        const res = await fetch("https://g6v9psc0-3060.brs.devtunnels.ms/classes");
+        const res = await fetch("http://localhost:3060/classes");
         if (!res.ok) {
           throw new Error("Erro ao carregar os dados");
         }

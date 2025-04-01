@@ -27,18 +27,23 @@ export interface AtributosClasse {
     habilidades?: HabilidadeClasse[];
 }
 
-export interface InformacoesConjuracao {
-    qtd_truques: number;
-    lista_magia: string;
-    qtd_magias: number;
+export interface InformacoesConjuracao{
+    qtd_truques: string,
+    lista_magia: string,
+    qtd_magias_inicial: number,
 
-    habilidade_conjuracao: string;
+    habilidade_conjuracao: string,
 
-    cd_magia: number;
-    ataque_magia: number;
+    info_truques: string,
+    info_espacos_magia: string,
+    info_magias_conhecidas: string,
+    info_habilidade_conjuracao: string,
 
-    conjuracao_ritual?: string;
-    foco_conjuracao?: string;
+    cd_magia: string,
+    ataque_magia: string,
+
+    conjuracao_ritual?: string,
+    foco_conjuracao?: string,
 }
 
 export interface InformacoesMagia {
